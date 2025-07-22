@@ -142,8 +142,8 @@ python3 run_free_ai.py
 ### 1. 本地部署
 ```bash
 # 克隆项目
-git clone https://github.com/your-repo/ai-trending-radar.git
-cd ai-trending-radar
+git clone https://github.com/huangzhongping/AIProjectCrawler.git
+cd AIProjectCrawler
 
 # 安装依赖
 pip install -r requirements.txt
@@ -162,7 +162,7 @@ python3 run_keywords_only.py
 - **错误处理**：失败时自动通知
 
 ### 3. 效果展示
-- **网站地址**：https://your-username.github.io/ai-trending-radar/
+- **网站地址**：https://huangzhongping.github.io/AIProjectCrawler/
 - **更新频率**：每日自动更新
 - **访问方式**：支持PC和移动端
 
@@ -214,8 +214,8 @@ python3 run_keywords_only.py
 
 ## 📚 资源链接
 
-- **项目地址**：https://github.com/your-repo/ai-trending-radar
-- **在线演示**：https://your-username.github.io/ai-trending-radar/
+- **项目地址**：https://github.com/huangzhongping/AIProjectCrawler
+- **在线演示**：https://huangzhongping.github.io/AIProjectCrawler/
 - **详细文档**：包含安装、使用、部署全套教程
 - **技术交流**：欢迎Star、Fork、提Issue
 

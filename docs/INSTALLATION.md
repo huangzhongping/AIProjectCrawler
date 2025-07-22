@@ -12,8 +12,8 @@
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/your-username/ai-trending-radar.git
-cd ai-trending-radar
+git clone https://github.com/huangzhongping/AIProjectCrawler.git
+cd AIProjectCrawler
 ```
 
 ### 2. 创建虚拟环境

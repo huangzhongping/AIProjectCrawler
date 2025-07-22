@@ -9,8 +9,8 @@
 ```bash
 # 1. 在 GitHub 上创建新仓库
 # 2. 克隆到本地
-git clone https://github.com/your-username/ai-trending-radar.git
-cd ai-trending-radar
+git clone https://github.com/huangzhongping/AIProjectCrawler.git
+cd AIProjectCrawler
 
 # 3. 推送代码
 git add .
@@ -81,7 +81,7 @@ GITHUB_TOKEN=your-github-token-here  # 提高 API 限制
 
 1. 等待工作流完成（通常 5-10 分钟）
 2. 检查 Actions 页面是否显示绿色勾号
-3. 访问 `https://your-username.github.io/ai-trending-radar/`
+3. 访问 `https://huangzhongping.github.io/AIProjectCrawler/`
 4. 确认页面正常显示
 
 ## 本地服务器部署
@@ -259,8 +259,8 @@ sudo apt update && sudo apt upgrade -y
 sudo apt install python3 python3-pip python3-venv git -y
 
 # 克隆项目
-git clone https://github.com/your-username/ai-trending-radar.git
-cd ai-trending-radar
+git clone https://github.com/huangzhongping/AIProjectCrawler.git
+cd AIProjectCrawler
 
 # 创建虚拟环境
 python3 -m venv venv
