@@ -1,0 +1,63 @@
+# AI爆款项目雷达配置文件 - Hugging Face免费API
+# 使用Hugging Face的免费推理API
+
+# API配置 - 使用Hugging Face
+api:
+  provider: "huggingface"
+  huggingface:
+    api_key: "${HUGGINGFACE_API_KEY}"  # 免费获取：https://huggingface.co/settings/tokens
+    base_url: "https://api-inference.huggingface.co/models"
+    model: "microsoft/DialoGPT-medium"  # 免费的对话模型
+    timeout: 30
+  openai:
+    api_key: ""  # 不使用OpenAI
+
+# 爬虫配置
+crawler:
+  request:
+    timeout: 30
+    retry_times: 3
+    delay_between_requests: 1
+  
+  github:
+    base_url: "https://github.com/trending"
+    languages: ["python", "javascript"]
+    time_ranges: ["daily"]
+    max_pages: 2
+
+# AI分析配置
+ai_analysis:
+  ai_relevance_threshold: 0.6
+  keyword_extraction:
+    max_keywords: 10
+  ai_keywords:
+    - "ai"
+    - "artificial intelligence"
+    - "machine learning"
+    - "ml"
+    - "deep learning"
+    - "neural network"
+    - "llm"
+    - "gpt"
+    - "chatbot"
+    - "nlp"
+    - "computer vision"
+    - "tensorflow"
+    - "pytorch"
+    - "transformers"
+    - "automation"
+    - "intelligent"
+    - "smart"
+    - "prediction"
+    - "classification"
+
+# 数据和日志配置
+data:
+  paths:
+    raw_data: "data/raw"
+    processed_data: "data/processed"
+    output: "output"
+
+logging:
+  level: "INFO"
+  file_path: "logs/app.log"

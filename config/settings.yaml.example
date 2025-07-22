@@ -1,0 +1,14 @@
+# AI爆款项目雷达配置文件模板
+# 复制此文件为 settings.yaml 并填入你的配置
+
+# API配置
+api:
+  openai:
+    api_key: "your-openai-api-key-here"  # 请替换为你的OpenAI API密钥
+    model: "gpt-3.5-turbo"
+    max_tokens: 1000
+    temperature: 0.3
+    timeout: 30
+
+# 其他配置保持默认值即可
+# 详细配置说明请参考 settings.yaml 文件

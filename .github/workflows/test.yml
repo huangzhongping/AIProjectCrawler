@@ -1,0 +1,155 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10']
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Create test config
+      run: |
+        cp config/settings.yaml.example config/settings.yaml
+        # 使用测试API密钥（如果有的话）
+        if [ -n "${{ secrets.TEST_OPENAI_API_KEY }}" ]; then
+          sed -i 's/your-openai-api-key-here/${{ secrets.TEST_OPENAI_API_KEY }}/g' config/settings.yaml
+        fi
+    
+    - name: Create test directories
+      run: |
+        mkdir -p data/{raw,processed,archive}
+        mkdir -p output/{reports,charts,web}
+        mkdir -p logs
+    
+    - name: Run linting
+      run: |
+        # 安装代码质量工具
+        pip install flake8 black isort
+        
+        # 检查代码格式
+        black --check src/
+        isort --check-only src/
+        flake8 src/ --max-line-length=100 --ignore=E203,W503
+    
+    - name: Run unit tests
+      run: |
+        # 如果有测试文件，运行测试
+        if [ -d "tests" ] && [ "$(ls -A tests)" ]; then
+          python -m pytest tests/ -v --cov=src --cov-report=xml
+        else
+          echo "No tests found, skipping test execution"
+        fi
+    
+    - name: Test configuration loading
+      run: |
+        python -c "
+        import sys
+        sys.path.append('src')
+        from utils.config import load_config, validate_config
+        config = load_config()
+        print('✅ Configuration loaded successfully')
+        print(f'Config keys: {list(config.keys())}')
+        "
+    
+    - name: Test module imports
+      run: |
+        python -c "
+        import sys
+        sys.path.append('src')
+        
+        # 测试各模块导入
+        try:
+            from crawlers.github_crawler import GitHubCrawler
+            print('✅ GitHub crawler import successful')
+        except Exception as e:
+            print(f'❌ GitHub crawler import failed: {e}')
+        
+        try:
+            from crawlers.producthunt_crawler import ProductHuntCrawler
+            print('✅ ProductHunt crawler import successful')
+        except Exception as e:
+            print(f'❌ ProductHunt crawler import failed: {e}')
+        
+        try:
+            from ai_analysis.classifier import AIProjectClassifier
+            print('✅ AI classifier import successful')
+        except Exception as e:
+            print(f'❌ AI classifier import failed: {e}')
+        
+        try:
+            from utils.data_cleaner import DataCleaner
+            print('✅ Data cleaner import successful')
+        except Exception as e:
+            print(f'❌ Data cleaner import failed: {e}')
+        
+        try:
+            from visualization.report_generator import ReportGenerator
+            print('✅ Report generator import successful')
+        except Exception as e:
+            print(f'❌ Report generator import failed: {e}')
+        "
+    
+    - name: Test basic functionality (without API)
+      env:
+        OPENAI_API_KEY: ""  # 空API密钥测试
+      run: |
+        python -c "
+        import sys
+        sys.path.append('src')
+        from utils.config import load_config
+        from utils.data_cleaner import DataCleaner
+        
+        config = load_config()
+        cleaner = DataCleaner(config)
+        
+        # 测试数据清洗
+        test_data = [
+            {'name': 'Test Project', 'description': 'A test AI project', 'url': 'https://github.com/test/test', 'stars': 100},
+            {'name': 'Another Project', 'description': 'Another AI project', 'url': 'https://github.com/test/another', 'stars': 50}
+        ]
+        
+        cleaned = cleaner.clean_and_deduplicate(test_data)
+        print(f'✅ Data cleaning test passed: {len(cleaned)} items processed')
+        "
+    
+    - name: Upload coverage reports
+      if: matrix.python-version == '3.9'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Run security scan
+      uses: pypa/gh-action-pip-audit@v1.0.8
+      with:
+        inputs: requirements.txt

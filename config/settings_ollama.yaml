@@ -1,0 +1,89 @@
+# AI爆款项目雷达配置文件 - Ollama本地模型
+# 使用本地Ollama模型，完全免费
+
+# API配置 - 使用Ollama
+api:
+  provider: "ollama"  # 使用ollama而不是openai
+  ollama:
+    base_url: "http://localhost:11434"
+    model: "llama3.2:3b"  # 轻量级模型，适合分析任务
+    timeout: 60
+  openai:
+    api_key: ""  # 不使用OpenAI
+
+# 爬虫配置
+crawler:
+  request:
+    timeout: 30
+    retry_times: 3
+    delay_between_requests: 1
+    user_agent: "AI-Trending-Radar/1.0"
+  
+  github:
+    base_url: "https://github.com/trending"
+    languages: ["python", "javascript", "typescript"]
+    time_ranges: ["daily"]
+    max_pages: 2
+  
+  producthunt:
+    base_url: "https://www.producthunt.com"
+    categories: ["artificial-intelligence"]
+    max_items: 20
+
+# AI分析配置
+ai_analysis:
+  ai_relevance_threshold: 0.6
+  keyword_extraction:
+    max_keywords: 10
+    min_keyword_length: 3
+  ai_keywords:
+    - "ai"
+    - "artificial intelligence"
+    - "machine learning"
+    - "ml"
+    - "deep learning"
+    - "neural network"
+    - "llm"
+    - "gpt"
+    - "chatbot"
+    - "nlp"
+    - "computer vision"
+    - "tensorflow"
+    - "pytorch"
+    - "transformers"
+    - "huggingface"
+    - "langchain"
+    - "embedding"
+    - "vector"
+    - "semantic"
+    - "recommendation"
+    - "prediction"
+    - "classification"
+    - "automation"
+    - "intelligent"
+    - "smart"
+    - "cognitive"
+
+# 数据配置
+data:
+  paths:
+    raw_data: "data/raw"
+    processed_data: "data/processed"
+    archive_data: "data/archive"
+    output: "output"
+  retention_days: 30
+
+# 可视化配置
+visualization:
+  charts:
+    theme: "plotly_white"
+    width: 1200
+    height: 800
+  reports:
+    max_projects_per_report: 30
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "{time} | {level} | {message}"
+  file_path: "logs/app.log"

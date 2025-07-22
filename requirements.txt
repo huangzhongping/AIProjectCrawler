@@ -1,0 +1,38 @@
+# Core dependencies for AI Trending Radar
+
+# Web scraping
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+lxml>=4.9.0
+
+# AI and NLP
+openai>=1.3.0
+
+# Data processing
+pandas>=2.1.0
+numpy>=1.24.0
+
+# Visualization
+matplotlib>=3.7.0
+plotly>=5.17.0
+
+# Configuration and utilities
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Logging
+loguru>=0.7.0
+
+# Testing
+pytest>=7.4.0
+
+# Async support
+aiohttp>=3.8.0
+
+# Optional: Enhanced features (install if needed)
+# selenium>=4.15.0          # For JavaScript-heavy sites
+# tiktoken>=0.5.0           # For token counting
+# seaborn>=0.12.0           # For advanced plotting
+# pytest-cov>=4.1.0        # For test coverage
+# black>=23.9.0             # For code formatting
+# flake8>=6.1.0             # For code linting

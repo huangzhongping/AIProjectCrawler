@@ -1,0 +1,168 @@
+# AI爆款项目雷达配置文件 - 安全版本
+# 此配置文件不包含任何敏感信息
+
+# API配置 - 使用环境变量
+api:
+  openai:
+    api_key: "${OPENAI_API_KEY}"  # 从环境变量读取
+    model: "gpt-3.5-turbo"
+    max_tokens: 1000
+    temperature: 0.3
+    timeout: 30
+
+# 爬虫配置
+crawler:
+  request:
+    timeout: 30
+    retry_times: 3
+    delay_between_requests: 1
+    user_agent: "AI-Trending-Radar/1.0"
+  
+  github:
+    base_url: "https://github.com/trending"
+    languages: ["python", "javascript", "typescript", "go", "rust"]
+    time_ranges: ["daily"]
+    max_pages: 2
+  
+  producthunt:
+    base_url: "https://www.producthunt.com"
+    categories: ["artificial-intelligence", "developer-tools"]
+    max_items: 30
+
+# AI分析配置
+ai_analysis:
+  ai_relevance_threshold: 0.6
+  keyword_extraction:
+    max_keywords: 15
+    min_keyword_length: 2
+  ai_keywords:
+    # 核心AI术语
+    - "ai"
+    - "artificial intelligence"
+    - "machine learning"
+    - "ml"
+    - "deep learning"
+    - "neural network"
+    - "neural"
+    - "llm"
+    - "large language model"
+    - "gpt"
+    - "chatgpt"
+    - "openai"
+    - "anthropic"
+    - "claude"
+    - "gemini"
+    - "bard"
+    
+    # 技术框架
+    - "tensorflow"
+    - "pytorch"
+    - "keras"
+    - "scikit-learn"
+    - "sklearn"
+    - "opencv"
+    - "transformers"
+    - "huggingface"
+    - "langchain"
+    - "llamaindex"
+    
+    # 应用领域
+    - "nlp"
+    - "natural language processing"
+    - "computer vision"
+    - "cv"
+    - "image recognition"
+    - "object detection"
+    - "face recognition"
+    - "speech recognition"
+    - "voice"
+    - "audio"
+    - "chatbot"
+    - "bot"
+    - "assistant"
+    - "agent"
+    - "automation"
+    - "intelligent"
+    - "smart"
+    - "cognitive"
+    - "recommendation"
+    - "recommender"
+    - "prediction"
+    - "predictive"
+    - "classification"
+    - "clustering"
+    - "regression"
+    - "sentiment"
+    - "analysis"
+    - "analytics"
+    - "data science"
+    - "data mining"
+    - "text mining"
+    - "pattern recognition"
+    - "anomaly detection"
+    - "fraud detection"
+    
+    # 新兴技术
+    - "rag"
+    - "retrieval augmented generation"
+    - "embedding"
+    - "vector"
+    - "similarity"
+    - "semantic"
+    - "multimodal"
+    - "diffusion"
+    - "stable diffusion"
+    - "midjourney"
+    - "dall-e"
+    - "whisper"
+    - "copilot"
+    - "code generation"
+    - "auto-gpt"
+    - "autonomous"
+    - "reinforcement learning"
+    - "rl"
+    - "generative"
+    - "gan"
+    - "vae"
+    - "transformer"
+    - "attention"
+    - "bert"
+    - "roberta"
+    - "t5"
+    - "fine-tuning"
+    - "prompt"
+    - "few-shot"
+    - "zero-shot"
+
+# 数据配置
+data:
+  paths:
+    raw_data: "data/raw"
+    processed_data: "data/processed"
+    archive_data: "data/archive"
+    output: "output"
+  retention_days: 30
+  deduplication:
+    similarity_threshold: 0.85
+    fields_to_compare: ["name", "description", "url"]
+
+# 可视化配置
+visualization:
+  charts:
+    theme: "plotly_white"
+    width: 1200
+    height: 800
+    font_size: 12
+  reports:
+    template_path: "src/visualization/templates"
+    output_format: ["html", "markdown"]
+    include_charts: true
+    max_projects_per_report: 50
+
+# 日志配置
+logging:
+  level: "INFO"
+  format: "{time} | {level} | {message}"
+  file_path: "logs/app.log"
+  rotation: "1 day"
+  retention: "7 days"

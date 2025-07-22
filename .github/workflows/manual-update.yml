@@ -1,0 +1,129 @@
+name: Manual AI Trends Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: '运行模式'
+        required: true
+        default: 'daily'
+        type: choice
+        options:
+        - daily
+        - analysis
+      data_file:
+        description: '数据文件路径（仅分析模式需要）'
+        required: false
+        type: string
+      deploy_pages:
+        description: '是否部署到GitHub Pages'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  manual-update:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Create config file
+      run: |
+        cp config/settings.yaml.example config/settings.yaml
+        sed -i 's/your-openai-api-key-here/${{ secrets.OPENAI_API_KEY }}/g' config/settings.yaml
+    
+    - name: Create necessary directories
+      run: |
+        mkdir -p data/{raw,processed,archive}
+        mkdir -p output/{reports,charts,web}
+        mkdir -p logs
+    
+    - name: Run update (daily mode)
+      if: ${{ github.event.inputs.mode == 'daily' }}
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        LOG_LEVEL: INFO
+      run: |
+        python main.py --mode daily
+    
+    - name: Run analysis (analysis mode)
+      if: ${{ github.event.inputs.mode == 'analysis' }}
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        LOG_LEVEL: INFO
+      run: |
+        python main.py --mode analysis --data-file "${{ github.event.inputs.data_file }}"
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: ai-trends-report
+        path: |
+          output/
+          data/processed/
+        retention-days: 30
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action (Manual)"
+        
+        git add data/processed/
+        git add output/
+        
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "Manual update: $(date +'%Y-%m-%d %H:%M:%S') - Mode: ${{ github.event.inputs.mode }}"
+          git push
+        fi
+    
+    - name: Setup Pages
+      if: ${{ github.event.inputs.deploy_pages == 'true' && github.ref == 'refs/heads/main' }}
+      uses: actions/configure-pages@v3
+    
+    - name: Upload to GitHub Pages
+      if: ${{ github.event.inputs.deploy_pages == 'true' && github.ref == 'refs/heads/main' }}
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: output/web
+    
+    - name: Deploy to GitHub Pages
+      if: ${{ github.event.inputs.deploy_pages == 'true' && github.ref == 'refs/heads/main' }}
+      id: deployment
+      uses: actions/deploy-pages@v2
+    
+    - name: Output summary
+      run: |
+        echo "## 🚀 AI趋势更新完成" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        echo "- **运行模式**: ${{ github.event.inputs.mode }}" >> $GITHUB_STEP_SUMMARY
+        echo "- **执行时间**: $(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_STEP_SUMMARY
+        echo "- **部署状态**: ${{ github.event.inputs.deploy_pages == 'true' && '已部署到GitHub Pages' || '未部署' }}" >> $GITHUB_STEP_SUMMARY
+        echo "" >> $GITHUB_STEP_SUMMARY
+        
+        if [ -f "output/reports/ai-trends-$(date +'%Y-%m-%d').html" ]; then
+          echo "- **报告文件**: 已生成" >> $GITHUB_STEP_SUMMARY
+        else
+          echo "- **报告文件**: 生成失败" >> $GITHUB_STEP_SUMMARY
+        fi
