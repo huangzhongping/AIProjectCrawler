@@ -1,0 +1,136 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'pages/**'
+      - 'docs/**'
+      - 'output/**'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:  # 允许手动触发
+
+# 设置GITHUB_TOKEN的权限
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 只允许一个并发部署，跳过正在运行和最新队列之间的运行队列
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+      
+    - name: Prepare Pages content
+      run: |
+        # 创建部署目录
+        mkdir -p deploy
+        
+        # 复制主页文件
+        if [ -f "docs/index.html" ]; then
+          cp docs/index.html deploy/
+          echo "✅ 复制主页文件"
+        fi
+        
+        if [ -f "docs/_config.yml" ]; then
+          cp docs/_config.yml deploy/
+          echo "✅ 复制配置文件"
+        fi
+        
+        # 如果pages目录存在，优先使用pages目录的内容
+        if [ -d "pages" ]; then
+          echo "📁 使用pages目录内容"
+          cp -r pages/* deploy/ 2>/dev/null || true
+        else
+          echo "📁 使用output目录内容"
+          # 复制output目录的内容
+          if [ -d "output" ]; then
+            # 复制历史记录页面
+            if [ -f "output/history.html" ]; then
+              cp output/history.html deploy/
+              echo "✅ 复制历史记录页面"
+            fi
+            
+            # 复制报告文件
+            if [ -d "output/reports" ]; then
+              mkdir -p deploy/reports
+              cp -r output/reports/* deploy/reports/ 2>/dev/null || true
+              echo "✅ 复制报告文件"
+            fi
+            
+            # 复制图表文件
+            if [ -d "output/charts" ]; then
+              mkdir -p deploy/charts
+              cp -r output/charts/* deploy/charts/ 2>/dev/null || true
+              echo "✅ 复制图表文件"
+            fi
+            
+            # 复制其他HTML和JSON文件
+            find output -maxdepth 1 -name "*.html" -exec cp {} deploy/ \; 2>/dev/null || true
+            find output -maxdepth 1 -name "*.json" -exec cp {} deploy/ \; 2>/dev/null || true
+          fi
+        fi
+        
+        # 确保有index.html
+        if [ ! -f "deploy/index.html" ]; then
+          echo "⚠️ 创建默认index.html"
+          cat > deploy/index.html << 'EOF'
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>AI项目雷达</title>
+            <style>
+                body { font-family: Arial, sans-serif; text-align: center; padding: 50px; background: #0a0a0a; color: #fff; }
+                h1 { color: #ff006e; }
+                .loading { animation: pulse 2s infinite; }
+                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+            </style>
+        </head>
+        <body>
+            <h1>🚀 AI项目雷达</h1>
+            <p class="loading">页面正在构建中...</p>
+            <p>请稍后刷新页面</p>
+        </body>
+        </html>
+        EOF
+        fi
+        
+        # 显示部署目录内容
+        echo "📋 部署目录内容:"
+        find deploy -type f | sort
+        
+        # 验证关键文件
+        echo "🔍 验证关键文件:"
+        for file in index.html history.html; do
+          if [ -f "deploy/$file" ]; then
+            size=$(stat -c%s "deploy/$file" 2>/dev/null || stat -f%z "deploy/$file" 2>/dev/null || echo "unknown")
+            echo "✅ $file (${size} bytes)"
+          else
+            echo "❌ $file (missing)"
+          fi
+        done
+    
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: './deploy'
+    
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
