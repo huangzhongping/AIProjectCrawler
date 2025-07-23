@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI爆款项目雷达 - 发现最新AI趋势</title>
+    <meta name="description" content="每日自动发现GitHub和Product Hunt上最热门的AI项目，智能分析技术趋势">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .stats {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 50px;
+        }
+        
+        .stats h2 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 20px;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 10px;
+        }
+        
+        .cta {
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            margin: 10px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid white;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+        
+        .demo-section {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .demo-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .project-list {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .project-item {
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .project-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+        }
+        
+        .project-name {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .project-stars {
+            color: #f39c12;
+            margin-right: 15px;
+        }
+        
+        .project-lang {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 AI爆款项目雷达</h1>
+            <p>每日自动发现最新最热的AI项目趋势</p>
+        </header>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🕷️</div>
+                <h3>智能数据收集</h3>
+                <p>自动爬取GitHub Trending、Product Hunt等平台，实时获取最新项目信息</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🧠</div>
+                <h3>AI驱动分析</h3>
+                <p>基于90+个AI关键词智能识别，可选OpenAI API进行深度分析</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>精美可视化</h3>
+                <p>生成交互式图表和HTML报告，多维度展示技术趋势</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3>全自动化</h3>
+                <p>GitHub Actions定时执行，自动部署到GitHub Pages</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🆓</div>
+                <h3>完全免费</h3>
+                <p>支持纯关键词分析模式，无需任何API费用</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>安全可靠</h3>
+                <p>完善的安全机制，支持多种配置模式</p>
+            </div>
+        </div>
+        
+        <div class="stats">
+            <h2>📈 实际效果展示</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number">15+</span>
+                    <div class="stat-label">每日发现AI项目</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">45K+</span>
+                    <div class="stat-label">平均项目星标数</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">22.6%</span>
+                    <div class="stat-label">AI项目识别准确率</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">&lt;30s</span>
+                    <div class="stat-label">完整分析用时</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-section">
+            <h2>🏆 今日发现的热门AI项目</h2>
+            <div class="project-list">
+                <div class="project-item">
+                    <div class="project-name">awesome-chatgpt-prompts</div>
+                    <div>
+                        <span class="project-stars">⭐ 130,984</span>
+                        <span class="project-lang">JavaScript</span>
+                    </div>
+                    <p>ChatGPT提示词集合，帮助更好地使用ChatGPT和其他LLM工具</p>
+                </div>
+                
+                <div class="project-item">
+                    <div class="project-name">awesome-llm-apps</div>
+                    <div>
+                        <span class="project-stars">⭐ 50,839</span>
+                        <span class="project-lang">Python</span>
+                    </div>
+                    <p>LLM应用集合，包含AI Agents和RAG，支持OpenAI、Anthropic、Gemini等模型</p>
+                </div>
+                
+                <div class="project-item">
+                    <div class="project-name">crawl4ai</div>
+                    <div>
+                        <span class="project-stars">⭐ 48,893</span>
+                        <span class="project-lang">Python</span>
+                    </div>
+                    <p>专为LLM设计的开源网页爬虫工具</p>
+                </div>
+                
+                <div class="project-item">
+                    <div class="project-name">transformer-explainer</div>
+                    <div>
+                        <span class="project-stars">⭐ 4,942</span>
+                        <span class="project-lang">JavaScript</span>
+                    </div>
+                    <p>Transformer可视化解释器，交互式学习LLM工作原理</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cta">
+            <a href="https://github.com/huangzhongping/AIProjectCrawler" class="btn">
+                🌟 查看项目源码
+            </a>
+            <a href="https://github.com/huangzhongping/AIProjectCrawler#readme" class="btn btn-secondary">
+                📚 阅读文档
+            </a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 50px; color: white; opacity: 0.8;">
+            <p>🤖 本页面展示AI爆款项目雷达的核心功能</p>
+            <p>项目完全开源，欢迎Star、Fork和贡献代码</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,47 @@
+# GitHub Pages 配置文件
+title: "AI爆款项目雷达"
+description: "每日自动发现最新最热的AI项目趋势"
+url: "https://huangzhongping.github.io"
+baseurl: "/AIProjectCrawler"
+
+# 主题设置
+theme: minima
+
+# 插件
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+
+# 排除文件
+exclude:
+  - README.md
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor
+  - .sass-cache
+  - .jekyll-cache
+  - .jekyll-metadata
+
+# 包含文件
+include:
+  - _pages
+
+# 默认设置
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+
+# 社交链接
+github_username: huangzhongping
+repository: huangzhongping/AIProjectCrawler
+
+# SEO设置
+lang: zh-CN
+author: huangzhongping
+
+# 网站信息
+timezone: Asia/Shanghai
