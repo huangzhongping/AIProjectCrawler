@@ -2,8 +2,10 @@ name: Daily AI Trends Update
 
 on:
   schedule:
-    # 每天UTC时间8:00执行（北京时间16:00）
-    - cron: '0 8 * * *'
+    # 每天UTC时间2:00执行（北京时间10:00）
+    - cron: '0 2 * * *'
+    # 每天UTC时间10:00执行（北京时间18:00）
+    - cron: '0 10 * * *'
   workflow_dispatch:  # 允许手动触发
   push:
     branches: [ main ]
@@ -94,6 +96,17 @@ jobs:
         if [ -d "output/reports" ]; then
           mkdir -p pages/reports
           cp -r output/reports/* pages/reports/ 2>/dev/null || true
+        fi
+
+        # 复制历史记录页面（如果存在）
+        if [ -f "output/history.html" ]; then
+          cp output/history.html pages/
+        fi
+
+        # 复制其他输出文件
+        if [ -d "output" ]; then
+          find output -name "*.html" -exec cp {} pages/ \; 2>/dev/null || true
+          find output -name "*.json" -exec cp {} pages/ \; 2>/dev/null || true
         fi
 
         # 确保至少有一个index.html

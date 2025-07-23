@@ -20,8 +20,10 @@ from ai_analysis.keyword_extractor import KeywordExtractor
 from ai_analysis.summarizer import ProjectSummarizer
 from utils.data_cleaner import DataCleaner
 from utils.storage import DataStorage
+from utils.daily_records import DailyRecordsManager
 from visualization.report_generator import ReportGenerator
 from visualization.chart_generator import ChartGenerator
+from visualization.history_generator import HistoryPageGenerator
 
 
 class AITrendingRadar:
@@ -40,8 +42,10 @@ class AITrendingRadar:
         self.summarizer = ProjectSummarizer(self.config)
         self.data_cleaner = DataCleaner(self.config)
         self.storage = DataStorage(self.config)
+        self.daily_records = DailyRecordsManager(self.config)
         self.report_generator = ReportGenerator(self.config)
         self.chart_generator = ChartGenerator(self.config)
+        self.history_generator = HistoryPageGenerator(self.config)
     
     async def run_daily_update(self):
         """执行每日更新流程"""
@@ -109,9 +113,18 @@ class AITrendingRadar:
             latest_html.parent.mkdir(parents=True, exist_ok=True)
             with open(latest_html, 'w', encoding='utf-8') as f:
                 f.write(report['html'])
-            
+
+            # 保存每日记录
+            self.logger.info("步骤6: 保存每日记录...")
+            self.daily_records.save_daily_record(today, cleaned_data, ai_projects)
+
+            # 生成历史记录页面
+            self.logger.info("步骤7: 生成历史记录页面...")
+            history_path = self.history_generator.generate_history_page()
+
             self.logger.info(f"✅ 每日更新完成！发现 {len(ai_projects)} 个AI相关项目")
             self.logger.info(f"📊 报告已保存到: {html_path}")
+            self.logger.info(f"📚 历史记录页面: {history_path}")
             
             return {
                 'success': True,
