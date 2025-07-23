@@ -370,6 +370,10 @@
             transition: all 0.4s ease;
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
         }
 
         .project-item::before {
@@ -406,6 +410,21 @@
             color: #fff;
             font-size: 1.4rem;
             margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .project-link-icon {
+            color: #06ffa5;
+            font-size: 1rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .project-item:hover .project-link-icon {
+            opacity: 1;
+            transform: translateX(5px);
         }
 
         .project-meta {
@@ -436,6 +455,51 @@
             color: rgba(255,255,255,0.8);
             line-height: 1.6;
             margin-top: 15px;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+
+        .project-item:hover .project-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .project-btn {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 20px;
+            color: #fff;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .project-btn:hover {
+            background: rgba(255,0,110,0.2);
+            border-color: rgba(255,0,110,0.5);
+            transform: translateY(-2px);
+        }
+
+        .project-btn.primary {
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            border: none;
+        }
+
+        .project-btn.primary:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(255,0,110,0.3);
         }
 
         /* 技术趋势图表区域 */
@@ -695,10 +759,13 @@
         <div class="demo-section">
             <h2>🏆 今日发现的热门AI项目</h2>
             <div class="project-list">
-                <div class="project-item">
+                <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" class="project-item">
                     <div class="project-header">
                         <div>
-                            <div class="project-name">awesome-chatgpt-prompts</div>
+                            <div class="project-name">
+                                awesome-chatgpt-prompts
+                                <i class="fas fa-external-link-alt project-link-icon"></i>
+                            </div>
                             <div class="project-meta">
                                 <span class="project-stars"><i class="fas fa-star"></i> 130,984</span>
                                 <span class="project-lang">JavaScript</span>
@@ -706,12 +773,26 @@
                         </div>
                     </div>
                     <div class="project-description">ChatGPT提示词集合，帮助更好地使用ChatGPT和其他LLM工具。包含各种场景的优质提示词模板。</div>
-                </div>
+                    <div class="project-actions">
+                        <span class="project-btn primary">
+                            <i class="fas fa-code"></i> 查看源码
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-star"></i> Star
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-download"></i> Clone
+                        </span>
+                    </div>
+                </a>
 
-                <div class="project-item">
+                <a href="https://github.com/Shubhamsaboo/awesome-llm-apps" target="_blank" class="project-item">
                     <div class="project-header">
                         <div>
-                            <div class="project-name">awesome-llm-apps</div>
+                            <div class="project-name">
+                                awesome-llm-apps
+                                <i class="fas fa-external-link-alt project-link-icon"></i>
+                            </div>
                             <div class="project-meta">
                                 <span class="project-stars"><i class="fas fa-star"></i> 50,839</span>
                                 <span class="project-lang">Python</span>
@@ -719,12 +800,26 @@
                         </div>
                     </div>
                     <div class="project-description">LLM应用集合，包含AI Agents和RAG，支持OpenAI、Anthropic、Gemini等多种模型。</div>
-                </div>
+                    <div class="project-actions">
+                        <span class="project-btn primary">
+                            <i class="fas fa-code"></i> 查看源码
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-star"></i> Star
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-download"></i> Clone
+                        </span>
+                    </div>
+                </a>
 
-                <div class="project-item">
+                <a href="https://github.com/unclecode/crawl4ai" target="_blank" class="project-item">
                     <div class="project-header">
                         <div>
-                            <div class="project-name">crawl4ai</div>
+                            <div class="project-name">
+                                crawl4ai
+                                <i class="fas fa-external-link-alt project-link-icon"></i>
+                            </div>
                             <div class="project-meta">
                                 <span class="project-stars"><i class="fas fa-star"></i> 48,893</span>
                                 <span class="project-lang">Python</span>
@@ -732,12 +827,26 @@
                         </div>
                     </div>
                     <div class="project-description">专为LLM设计的开源网页爬虫工具，支持异步处理和智能内容提取。</div>
-                </div>
+                    <div class="project-actions">
+                        <span class="project-btn primary">
+                            <i class="fas fa-code"></i> 查看源码
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-star"></i> Star
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-download"></i> Clone
+                        </span>
+                    </div>
+                </a>
 
-                <div class="project-item">
+                <a href="https://github.com/poloclub/transformer-explainer" target="_blank" class="project-item">
                     <div class="project-header">
                         <div>
-                            <div class="project-name">transformer-explainer</div>
+                            <div class="project-name">
+                                transformer-explainer
+                                <i class="fas fa-external-link-alt project-link-icon"></i>
+                            </div>
                             <div class="project-meta">
                                 <span class="project-stars"><i class="fas fa-star"></i> 4,942</span>
                                 <span class="project-lang">JavaScript</span>
@@ -745,12 +854,26 @@
                         </div>
                     </div>
                     <div class="project-description">Transformer可视化解释器，交互式学习LLM工作原理，帮助理解注意力机制。</div>
-                </div>
+                    <div class="project-actions">
+                        <span class="project-btn primary">
+                            <i class="fas fa-code"></i> 查看源码
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-star"></i> Star
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-play"></i> 在线体验
+                        </span>
+                    </div>
+                </a>
 
-                <div class="project-item">
+                <a href="https://github.com/roboflow/supervision" target="_blank" class="project-item">
                     <div class="project-header">
                         <div>
-                            <div class="project-name">supervision</div>
+                            <div class="project-name">
+                                supervision
+                                <i class="fas fa-external-link-alt project-link-icon"></i>
+                            </div>
                             <div class="project-meta">
                                 <span class="project-stars"><i class="fas fa-star"></i> 29,043</span>
                                 <span class="project-lang">Python</span>
@@ -758,7 +881,18 @@
                         </div>
                     </div>
                     <div class="project-description">计算机视觉工具包，提供可重用的CV工具和算法，支持目标检测和图像分析。</div>
-                </div>
+                    <div class="project-actions">
+                        <span class="project-btn primary">
+                            <i class="fas fa-code"></i> 查看源码
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-star"></i> Star
+                        </span>
+                        <span class="project-btn">
+                            <i class="fas fa-book"></i> 文档
+                        </span>
+                    </div>
+                </a>
             </div>
         </div>
         
@@ -995,6 +1129,108 @@
                 }
             }, 3000);
         }
+
+        // 处理项目按钮点击事件
+        function handleProjectAction(event, action, projectName) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // 这里可以添加具体的按钮功能
+            console.log(`${action} action for ${projectName}`);
+
+            // 可以添加一些视觉反馈
+            const button = event.target.closest('.project-btn');
+            if (button) {
+                button.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    button.style.transform = '';
+                }, 150);
+            }
+        }
+
+        // 添加项目卡片交互增强
+        document.addEventListener('DOMContentLoaded', () => {
+            // 为所有项目按钮添加点击事件
+            document.querySelectorAll('.project-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const action = btn.textContent.trim();
+                    const projectItem = btn.closest('.project-item');
+                    const projectName = projectItem.querySelector('.project-name').textContent.trim();
+
+                    // 添加点击效果
+                    btn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        btn.style.transform = '';
+                    }, 150);
+
+                    // 根据按钮类型执行不同操作
+                    if (action.includes('查看源码')) {
+                        // 跳转到GitHub页面
+                        window.open(projectItem.href, '_blank');
+                    } else if (action.includes('Star')) {
+                        // 跳转到GitHub Star页面
+                        window.open(projectItem.href + '/stargazers', '_blank');
+                    } else if (action.includes('Clone')) {
+                        // 复制克隆命令到剪贴板
+                        const cloneUrl = projectItem.href.replace('github.com', 'github.com') + '.git';
+                        navigator.clipboard.writeText(`git clone ${cloneUrl}`).then(() => {
+                            // 显示复制成功提示
+                            showToast('克隆命令已复制到剪贴板！');
+                        });
+                    } else if (action.includes('在线体验')) {
+                        // 跳转到在线演示页面
+                        window.open('https://poloclub.github.io/transformer-explainer/', '_blank');
+                    } else if (action.includes('文档')) {
+                        // 跳转到文档页面
+                        window.open(projectItem.href + '#readme', '_blank');
+                    }
+                });
+            });
+        });
+
+        // 显示提示消息
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(45deg, #ff006e, #8338ec);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideInRight 0.3s ease;
+            `;
+            toast.textContent = message;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // 添加动画样式
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOutRight {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>
