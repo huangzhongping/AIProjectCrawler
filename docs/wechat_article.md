@@ -162,7 +162,7 @@ python3 run_keywords_only.py
 - **错误处理**：失败时自动通知
 
 ### 3. 效果展示
-- **网站地址**：https://huangzhongping.github.io/AIProjectCrawler/
+- **网站地址**：GitHub Pages配置中，即将上线
 - **更新频率**：每日自动更新
 - **访问方式**：支持PC和移动端
 
@@ -215,7 +215,7 @@ python3 run_keywords_only.py
 ## 📚 资源链接
 
 - **项目地址**：https://github.com/huangzhongping/AIProjectCrawler
-- **在线演示**：https://huangzhongping.github.io/AIProjectCrawler/
+- **在线演示**：GitHub Pages配置中，即将上线
 - **详细文档**：包含安装、使用、部署全套教程
 - **技术交流**：欢迎Star、Fork、提Issue
 

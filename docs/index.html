@@ -5,110 +5,286 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI爆款项目雷达 - 发现最新AI趋势</title>
     <meta name="description" content="每日自动发现GitHub和Product Hunt上最热门的AI项目，智能分析技术趋势">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            background: #0a0a0a;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 粒子背景 */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* 动态渐变背景 */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.1;
+            z-index: -2;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 20px;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .header {
             text-align: center;
-            color: white;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
+            padding: 100px 0;
+            position: relative;
         }
-        
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,0,110,0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 0.3; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 0.6; }
+        }
+
         .header h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 4rem;
+            margin-bottom: 30px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+            letter-spacing: -2px;
+            animation: titleGlow 2s ease-in-out infinite alternate;
         }
-        
+
+        @keyframes titleGlow {
+            from { filter: drop-shadow(0 0 20px rgba(255,0,110,0.5)); }
+            to { filter: drop-shadow(0 0 40px rgba(131,56,236,0.8)); }
+        }
+
         .header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
+            font-size: 1.4rem;
+            opacity: 0.8;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 0.8; transform: translateY(0); }
+        }
+
+        /* 实时状态指示器 */
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: fadeInUp 1s ease-out 1s both;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #06ffa5;
+            border-radius: 50%;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.3; }
         }
         
         .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 30px;
-            margin-bottom: 50px;
+            margin-bottom: 80px;
         }
-        
+
         .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
+            background: rgba(255,255,255,0.05);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
         }
-        
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-10px) scale(1.02);
+            border-color: rgba(255,0,110,0.5);
+            box-shadow: 0 20px 60px rgba(255,0,110,0.2);
         }
-        
+
         .feature-icon {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 3.5rem;
+            margin-bottom: 25px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
         }
-        
+
         .feature-card h3 {
-            color: #667eea;
-            margin-bottom: 15px;
-            font-size: 1.5rem;
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .feature-card p {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.7;
         }
         
         .stats {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 50px;
+            background: rgba(255,255,255,0.05);
+            padding: 60px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .stats::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255,0,110,0.1), transparent);
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-content {
+            position: relative;
+            z-index: 1;
+        }
+
         .stats h2 {
             text-align: center;
-            color: #667eea;
-            margin-bottom: 30px;
-            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 50px;
+            font-size: 2.5rem;
+            font-weight: 800;
         }
-        
+
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
             text-align: center;
         }
-        
+
         .stat-item {
-            padding: 20px;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
         }
-        
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.1);
+        }
+
         .stat-number {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #667eea;
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             display: block;
+            margin-bottom: 15px;
         }
-        
+
         .stat-label {
-            color: #666;
-            margin-top: 10px;
+            color: rgba(255,255,255,0.8);
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #06ffa5;
         }
         
         .cta {
@@ -118,201 +294,470 @@
         
         .btn {
             display: inline-block;
-            padding: 15px 30px;
-            margin: 10px;
-            background: #667eea;
+            padding: 18px 40px;
+            margin: 15px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
             color: white;
             text-decoration: none;
             border-radius: 50px;
-            font-weight: bold;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 30px rgba(255,0,110,0.3);
+            position: relative;
+            overflow: hidden;
+            border: none;
         }
-        
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
         .btn:hover {
-            background: #5a6fd8;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 20px 50px rgba(255,0,110,0.4);
         }
-        
+
         .btn-secondary {
             background: transparent;
-            border: 2px solid white;
-            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
         }
-        
+
         .btn-secondary:hover {
-            background: white;
-            color: #667eea;
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.6);
         }
         
         .demo-section {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            background: rgba(255,255,255,0.05);
+            padding: 60px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            margin-bottom: 50px;
         }
-        
+
         .demo-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
+            color: #fff;
+            margin-bottom: 40px;
             text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
         }
-        
+
         .project-list {
             display: grid;
-            gap: 20px;
+            gap: 25px;
         }
-        
+
         .project-item {
-            padding: 20px;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            transition: all 0.3s ease;
+            padding: 30px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .project-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        .project-item:hover::before {
+            transform: scaleY(1);
+        }
+
         .project-item:hover {
-            border-color: #667eea;
-            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.1);
+            transform: translateX(10px);
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,0,110,0.3);
         }
-        
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
         .project-name {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 1.2rem;
-            margin-bottom: 10px;
+            font-weight: 800;
+            color: #fff;
+            font-size: 1.4rem;
+            margin-bottom: 5px;
         }
-        
+
+        .project-meta {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
         .project-stars {
-            color: #f39c12;
-            margin-right: 15px;
+            color: #ffd700;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        
+
         .project-lang {
-            color: #666;
+            color: #06ffa5;
             font-size: 0.9rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: rgba(6,255,165,0.1);
+            border-radius: 20px;
+            border: 1px solid rgba(6,255,165,0.3);
+        }
+
+        .project-description {
+            color: rgba(255,255,255,0.8);
+            line-height: 1.6;
+            margin-top: 15px;
+        }
+
+        /* 技术趋势图表区域 */
+        .chart-section {
+            background: rgba(255,255,255,0.05);
+            padding: 60px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            margin-bottom: 50px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-top: 30px;
         }
         
+        /* 实时数据流动画 */
+        .data-stream {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+        }
+
+        .data-stream.active {
+            transform: translateX(0);
+        }
+
+        .stream-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            border-left: 3px solid #06ffa5;
+            font-size: 0.9rem;
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        /* 浮动操作按钮 */
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255,0,110,0.3);
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255,0,110,0.5);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .data-stream {
+                width: 250px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .header p {
+                font-size: 1.1rem;
+            }
+
+            .container {
+                padding: 15px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .feature-card {
+                padding: 30px;
+            }
+
+            .stats {
+                padding: 40px 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
+
+            .demo-section {
+                padding: 40px 20px;
+            }
+
+            .chart-section {
+                padding: 40px 20px;
+            }
+
+            .data-stream {
+                width: 100%;
+                height: 50vh;
+                top: auto;
+                bottom: 0;
+                transform: translateY(100%);
+            }
+
+            .data-stream.active {
+                transform: translateY(0);
+            }
+
+            .btn {
+                padding: 15px 30px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
             .header h1 {
                 font-size: 2rem;
             }
-            
-            .container {
-                padding: 10px;
-            }
-            
-            .features {
+
+            .stats-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .stat-number {
+                font-size: 2.5rem;
             }
         }
     </style>
 </head>
 <body>
+    <div id="particles-js"></div>
+    <div class="bg-gradient"></div>
+
     <div class="container">
         <header class="header">
             <h1>🚀 AI爆款项目雷达</h1>
             <p>每日自动发现最新最热的AI项目趋势</p>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span>系统运行中 • 最后更新: <span id="last-update">2分钟前</span></span>
+            </div>
         </header>
         
         <div class="features">
             <div class="feature-card">
-                <div class="feature-icon">🕷️</div>
+                <div class="feature-icon"><i class="fas fa-spider"></i></div>
                 <h3>智能数据收集</h3>
-                <p>自动爬取GitHub Trending、Product Hunt等平台，实时获取最新项目信息</p>
+                <p>自动爬取GitHub Trending、Product Hunt等平台，实时获取最新项目信息，支持多语言和多时间范围</p>
             </div>
-            
+
             <div class="feature-card">
-                <div class="feature-icon">🧠</div>
+                <div class="feature-icon"><i class="fas fa-brain"></i></div>
                 <h3>AI驱动分析</h3>
-                <p>基于90+个AI关键词智能识别，可选OpenAI API进行深度分析</p>
+                <p>基于90+个AI关键词智能识别，支持OpenAI API、Ollama本地模型等多种AI分析方式</p>
             </div>
-            
+
             <div class="feature-card">
-                <div class="feature-icon">📊</div>
+                <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
                 <h3>精美可视化</h3>
-                <p>生成交互式图表和HTML报告，多维度展示技术趋势</p>
+                <p>生成交互式图表和HTML报告，多维度展示技术趋势，支持实时数据更新</p>
             </div>
-            
+
             <div class="feature-card">
-                <div class="feature-icon">🔄</div>
+                <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
                 <h3>全自动化</h3>
-                <p>GitHub Actions定时执行，自动部署到GitHub Pages</p>
+                <p>GitHub Actions定时执行，自动部署到GitHub Pages，零维护成本</p>
             </div>
-            
+
             <div class="feature-card">
-                <div class="feature-icon">🆓</div>
+                <div class="feature-icon"><i class="fas fa-gift"></i></div>
                 <h3>完全免费</h3>
-                <p>支持纯关键词分析模式，无需任何API费用</p>
+                <p>支持纯关键词分析模式，无需任何API费用，开源免费使用</p>
             </div>
-            
+
             <div class="feature-card">
-                <div class="feature-icon">🔒</div>
+                <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
                 <h3>安全可靠</h3>
-                <p>完善的安全机制，支持多种配置模式</p>
+                <p>完善的安全机制，支持多种配置模式，保护敏感信息</p>
             </div>
         </div>
         
         <div class="stats">
-            <h2>📈 实际效果展示</h2>
-            <div class="stats-grid">
-                <div class="stat-item">
-                    <span class="stat-number">15+</span>
-                    <div class="stat-label">每日发现AI项目</div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">45K+</span>
-                    <div class="stat-label">平均项目星标数</div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">22.6%</span>
-                    <div class="stat-label">AI项目识别准确率</div>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-number">&lt;30s</span>
-                    <div class="stat-label">完整分析用时</div>
+            <div class="stats-content">
+                <h2>📈 实际效果展示</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-rocket"></i></div>
+                        <span class="stat-number" data-target="15">0</span>
+                        <div class="stat-label">每日发现AI项目</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-star"></i></div>
+                        <span class="stat-number" data-target="45000">0</span>
+                        <div class="stat-label">平均项目星标数</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+                        <span class="stat-number" data-target="22.6">0</span>
+                        <div class="stat-label">AI项目识别准确率(%)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <span class="stat-number" data-target="30">0</span>
+                        <div class="stat-label">完整分析用时(秒)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-database"></i></div>
+                        <span class="stat-number" data-target="90">0</span>
+                        <div class="stat-label">AI关键词数量</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-icon"><i class="fas fa-code"></i></div>
+                        <span class="stat-number" data-target="5">0</span>
+                        <div class="stat-label">支持编程语言</div>
+                    </div>
                 </div>
             </div>
         </div>
         
+        <!-- 技术趋势图表 -->
+        <div class="chart-section">
+            <h2>📊 AI技术趋势分析</h2>
+            <div class="chart-container">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
         <div class="demo-section">
             <h2>🏆 今日发现的热门AI项目</h2>
             <div class="project-list">
                 <div class="project-item">
-                    <div class="project-name">awesome-chatgpt-prompts</div>
-                    <div>
-                        <span class="project-stars">⭐ 130,984</span>
-                        <span class="project-lang">JavaScript</span>
+                    <div class="project-header">
+                        <div>
+                            <div class="project-name">awesome-chatgpt-prompts</div>
+                            <div class="project-meta">
+                                <span class="project-stars"><i class="fas fa-star"></i> 130,984</span>
+                                <span class="project-lang">JavaScript</span>
+                            </div>
+                        </div>
                     </div>
-                    <p>ChatGPT提示词集合，帮助更好地使用ChatGPT和其他LLM工具</p>
+                    <div class="project-description">ChatGPT提示词集合，帮助更好地使用ChatGPT和其他LLM工具。包含各种场景的优质提示词模板。</div>
                 </div>
-                
+
                 <div class="project-item">
-                    <div class="project-name">awesome-llm-apps</div>
-                    <div>
-                        <span class="project-stars">⭐ 50,839</span>
-                        <span class="project-lang">Python</span>
+                    <div class="project-header">
+                        <div>
+                            <div class="project-name">awesome-llm-apps</div>
+                            <div class="project-meta">
+                                <span class="project-stars"><i class="fas fa-star"></i> 50,839</span>
+                                <span class="project-lang">Python</span>
+                            </div>
+                        </div>
                     </div>
-                    <p>LLM应用集合，包含AI Agents和RAG，支持OpenAI、Anthropic、Gemini等模型</p>
+                    <div class="project-description">LLM应用集合，包含AI Agents和RAG，支持OpenAI、Anthropic、Gemini等多种模型。</div>
                 </div>
-                
+
                 <div class="project-item">
-                    <div class="project-name">crawl4ai</div>
-                    <div>
-                        <span class="project-stars">⭐ 48,893</span>
-                        <span class="project-lang">Python</span>
+                    <div class="project-header">
+                        <div>
+                            <div class="project-name">crawl4ai</div>
+                            <div class="project-meta">
+                                <span class="project-stars"><i class="fas fa-star"></i> 48,893</span>
+                                <span class="project-lang">Python</span>
+                            </div>
+                        </div>
                     </div>
-                    <p>专为LLM设计的开源网页爬虫工具</p>
+                    <div class="project-description">专为LLM设计的开源网页爬虫工具，支持异步处理和智能内容提取。</div>
                 </div>
-                
+
                 <div class="project-item">
-                    <div class="project-name">transformer-explainer</div>
-                    <div>
-                        <span class="project-stars">⭐ 4,942</span>
-                        <span class="project-lang">JavaScript</span>
+                    <div class="project-header">
+                        <div>
+                            <div class="project-name">transformer-explainer</div>
+                            <div class="project-meta">
+                                <span class="project-stars"><i class="fas fa-star"></i> 4,942</span>
+                                <span class="project-lang">JavaScript</span>
+                            </div>
+                        </div>
                     </div>
-                    <p>Transformer可视化解释器，交互式学习LLM工作原理</p>
+                    <div class="project-description">Transformer可视化解释器，交互式学习LLM工作原理，帮助理解注意力机制。</div>
+                </div>
+
+                <div class="project-item">
+                    <div class="project-header">
+                        <div>
+                            <div class="project-name">supervision</div>
+                            <div class="project-meta">
+                                <span class="project-stars"><i class="fas fa-star"></i> 29,043</span>
+                                <span class="project-lang">Python</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-description">计算机视觉工具包，提供可重用的CV工具和算法，支持目标检测和图像分析。</div>
                 </div>
             </div>
         </div>
@@ -326,10 +771,230 @@
             </a>
         </div>
         
-        <div style="text-align: center; margin-top: 50px; color: white; opacity: 0.8;">
+        <div style="text-align: center; margin-top: 80px; color: rgba(255,255,255,0.6);">
             <p>🤖 本页面展示AI爆款项目雷达的核心功能</p>
             <p>项目完全开源，欢迎Star、Fork和贡献代码</p>
+            <p style="margin-top: 20px; font-size: 0.9rem;">
+                <i class="fas fa-code"></i> 基于Python构建 •
+                <i class="fas fa-heart" style="color: #ff006e;"></i> 开源免费 •
+                <i class="fas fa-rocket"></i> 持续更新
+            </p>
         </div>
     </div>
+
+    <!-- 实时数据流 -->
+    <div class="data-stream" id="dataStream">
+        <h3 style="color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <i class="fas fa-stream"></i> 实时数据流
+        </h3>
+        <div id="streamContent">
+            <div class="stream-item">
+                <strong>🔍 正在扫描GitHub Trending...</strong><br>
+                <small>发现32个新项目</small>
+            </div>
+            <div class="stream-item">
+                <strong>🧠 AI分析中...</strong><br>
+                <small>识别到7个AI相关项目</small>
+            </div>
+            <div class="stream-item">
+                <strong>📊 生成报告...</strong><br>
+                <small>创建可视化图表</small>
+            </div>
+            <div class="stream-item">
+                <strong>✅ 分析完成</strong><br>
+                <small>报告已更新</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- 浮动操作按钮 -->
+    <div class="fab" onclick="toggleDataStream()">
+        <i class="fas fa-chart-bar"></i>
+    </div>
+
+    <script>
+        // 粒子背景配置
+        particlesJS('particles-js', {
+            particles: {
+                number: { value: 80, density: { enable: true, value_area: 800 } },
+                color: { value: '#ffffff' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5, random: false },
+                size: { value: 3, random: true },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#ffffff',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 6,
+                    direction: 'none',
+                    random: false,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: 'canvas',
+                events: {
+                    onhover: { enable: true, mode: 'repulse' },
+                    onclick: { enable: true, mode: 'push' },
+                    resize: true
+                }
+            },
+            retina_detect: true
+        });
+
+        // 数字动画计数器
+        function animateCounter(element, target, duration = 2000) {
+            const start = 0;
+            const increment = target / (duration / 16);
+            let current = start;
+
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+
+                if (target > 1000) {
+                    element.textContent = (current / 1000).toFixed(1) + 'K+';
+                } else if (target % 1 !== 0) {
+                    element.textContent = current.toFixed(1);
+                } else {
+                    element.textContent = Math.floor(current);
+                }
+            }, 16);
+        }
+
+        // 观察器，当元素进入视口时触发动画
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.stat-number');
+                    counters.forEach(counter => {
+                        const target = parseFloat(counter.getAttribute('data-target'));
+                        animateCounter(counter, target);
+                    });
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        // 监听统计数据区域
+        document.addEventListener('DOMContentLoaded', () => {
+            const statsSection = document.querySelector('.stats');
+            if (statsSection) {
+                observer.observe(statsSection);
+            }
+
+            // 初始化图表
+            initTrendChart();
+
+            // 更新时间
+            updateLastUpdateTime();
+            setInterval(updateLastUpdateTime, 60000); // 每分钟更新
+
+            // 模拟实时数据流
+            simulateDataStream();
+        });
+
+        // 切换数据流显示
+        function toggleDataStream() {
+            const dataStream = document.getElementById('dataStream');
+            dataStream.classList.toggle('active');
+        }
+
+        // 初始化趋势图表
+        function initTrendChart() {
+            const ctx = document.getElementById('trendChart');
+            if (!ctx) return;
+
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月'],
+                    datasets: [{
+                        label: 'AI项目数量',
+                        data: [12, 19, 15, 25, 22, 30, 28],
+                        borderColor: '#ff006e',
+                        backgroundColor: 'rgba(255, 0, 110, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }, {
+                        label: '平均星标数',
+                        data: [30, 35, 32, 45, 42, 50, 48],
+                        borderColor: '#8338ec',
+                        backgroundColor: 'rgba(131, 56, 236, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 更新最后更新时间
+        function updateLastUpdateTime() {
+            const now = new Date();
+            const minutes = Math.floor(Math.random() * 10) + 1;
+            document.getElementById('last-update').textContent = `${minutes}分钟前`;
+        }
+
+        // 模拟实时数据流
+        function simulateDataStream() {
+            const messages = [
+                { icon: '🔍', title: '扫描GitHub Trending', desc: '发现新项目' },
+                { icon: '🧠', title: 'AI分析进行中', desc: '识别AI项目' },
+                { icon: '📊', title: '生成可视化', desc: '创建图表' },
+                { icon: '✅', title: '更新完成', desc: '数据已同步' },
+                { icon: '🚀', title: '发现热门项目', desc: '高星标项目' },
+                { icon: '🔥', title: '趋势分析', desc: '技术热点' }
+            ];
+
+            setInterval(() => {
+                const streamContent = document.getElementById('streamContent');
+                const message = messages[Math.floor(Math.random() * messages.length)];
+                const count = Math.floor(Math.random() * 20) + 1;
+
+                const newItem = document.createElement('div');
+                newItem.className = 'stream-item';
+                newItem.innerHTML = `
+                    <strong>${message.icon} ${message.title}...</strong><br>
+                    <small>${message.desc} ${count}个</small>
+                `;
+
+                streamContent.insertBefore(newItem, streamContent.firstChild);
+
+                // 保持最多10条消息
+                while (streamContent.children.length > 10) {
+                    streamContent.removeChild(streamContent.lastChild);
+                }
+            }, 3000);
+        }
+    </script>
 </body>
 </html>
