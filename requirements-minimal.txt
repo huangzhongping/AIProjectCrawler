@@ -1,0 +1,31 @@
+# Minimal requirements for AI Trending Radar
+# Compatible with older Python environments
+
+# Web scraping
+requests>=2.25.0
+beautifulsoup4>=4.9.0
+lxml>=4.6.0
+
+# AI and NLP (optional)
+openai>=1.0.0
+
+# Data processing
+pandas>=1.2.0
+numpy>=1.19.0
+
+# Visualization
+matplotlib>=3.3.0
+plotly>=5.0.0
+
+# Configuration and utilities
+pyyaml>=5.4.0
+python-dotenv>=0.19.0
+
+# Logging
+loguru>=0.6.0
+
+# Async support
+aiohttp>=3.7.0
+
+# Testing (optional)
+pytest>=6.2.0
