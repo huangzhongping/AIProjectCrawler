@@ -1,0 +1,755 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI项目雷达 - 历史记录</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff, #06ffa5);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 60px 0;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ff006e, #8338ec, #3a86ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 800;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(45deg, #ff006e, #8338ec);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255,0,110,0.3);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .trends-section {
+            margin-bottom: 80px;
+        }
+        
+        .trends-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 40px;
+        }
+        
+        .chart-container {
+            background: rgba(255,255,255,0.05);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+        }
+        
+        .chart-container h3 {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #fff;
+        }
+        
+        .chart-container canvas {
+            max-height: 300px;
+        }
+        
+        .records-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .records-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .record-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .record-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255,0,110,0.5);
+            box-shadow: 0 15px 40px rgba(255,0,110,0.2);
+        }
+        
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .record-date .date-main {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .record-date .date-sub {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            margin-left: 10px;
+        }
+        
+        .record-stats {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #06ffa5;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .record-summary {
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        
+        .top-project {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .project-label {
+            font-size: 0.9rem;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+        
+        .project-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .project-name {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .project-name:hover {
+            color: #06ffa5;
+        }
+        
+        .project-stars {
+            color: #ffd700;
+            font-size: 0.9rem;
+        }
+        
+        .record-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-small:hover {
+            background: rgba(255,0,110,0.2);
+            border-color: rgba(255,0,110,0.5);
+        }
+        
+        .record-total {
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 80px;
+            padding: 40px 0;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .footer a {
+            color: #06ffa5;
+            text-decoration: none;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .records-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-history"></i> AI项目雷达历史记录</h1>
+            <p>追踪每日AI项目发现趋势</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="btn btn-secondary">
+                    <i class="fas fa-home"></i> 返回首页
+                </a>
+                <a href="#trends" class="btn">
+                    <i class="fas fa-chart-line"></i> 查看趋势
+                </a>
+            </div>
+        </header>
+        
+        <!-- 趋势图表区域 -->
+        <section id="trends" class="trends-section">
+            <h2><i class="fas fa-chart-line"></i> 趋势分析</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3>每日AI项目发现数量</h3>
+                    <canvas id="dailyChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3>编程语言分布</h3>
+                    <canvas id="languageChart"></canvas>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 历史记录列表 -->
+        <section class="records-section">
+            <h2><i class="fas fa-calendar-alt"></i> 每日记录</h2>
+            <div class="records-grid">
+                
+        <div class="record-card" data-date="2025-07-23">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月23日</span>
+                    <span class="date-sub">周三</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">4</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">11.4%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 35 个项目，其中 4 个AI相关项目（11.4%）。主要编程语言为 Python，平均星标数 57910。最热门项目：awesome-chatgpt-prompts（131094⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/f/awesome-chatgpt-prompts" target="_blank" class="project-name">
+                            awesome-chatgpt-prompts
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 131,094
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-23')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">35 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-22">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月22日</span>
+                    <span class="date-sub">周二</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 2508。最热门项目：test-ai-project-2（3206⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 3,206
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-22')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-21">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月21日</span>
+                    <span class="date-sub">周一</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 2718。最热门项目：test-ai-project-2（3697⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 3,697
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-21')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-20">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月20日</span>
+                    <span class="date-sub">周日</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 2666。最热门项目：test-ai-project-2（3629⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 3,629
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-20')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-19">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月19日</span>
+                    <span class="date-sub">周六</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 2862。最热门项目：test-ai-project-2（3810⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 3,810
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-19')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-18">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月18日</span>
+                    <span class="date-sub">周五</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 2971。最热门项目：test-ai-project-2（3820⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 3,820
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-18')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+        <div class="record-card" data-date="2025-07-17">
+            <div class="record-header">
+                <div class="record-date">
+                    <span class="date-main">07月17日</span>
+                    <span class="date-sub">周四</span>
+                </div>
+                <div class="record-stats">
+                    <div class="stat-item">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">AI项目</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number">66.7%</span>
+                        <span class="stat-label">占比</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="record-content">
+                <div class="record-summary">今日发现 3 个项目，其中 2 个AI相关项目（66.7%）。主要编程语言为 Python，平均星标数 3168。最热门项目：test-ai-project-2（4247⭐）。</div>
+                
+                
+                <div class="top-project">
+                    <div class="project-label">🏆 今日最热</div>
+                    <div class="project-info">
+                        <a href="https://github.com/test/ai-project-2" target="_blank" class="project-name">
+                            test-ai-project-2
+                        </a>
+                        <span class="project-stars">
+                            <i class="fas fa-star"></i> 4,247
+                        </span>
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div class="record-actions">
+                <button class="btn-small" onclick="viewDetails('2025-07-17')">
+                    <i class="fas fa-eye"></i> 查看详情
+                </button>
+                <span class="record-total">3 个项目</span>
+            </div>
+        </div>
+        
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <p>数据更新时间: 2025-07-23 14:12:09</p>
+            <p>
+                <a href="https://github.com/huangzhongping/AIProjectCrawler" target="_blank">
+                    <i class="fab fa-github"></i> 项目源码
+                </a>
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        
+        // 图表数据
+        const chartData = {"daily": {"labels": ["2025-07-17", "2025-07-18", "2025-07-19", "2025-07-20", "2025-07-21", "2025-07-22", "2025-07-23"], "values": [2, 2, 2, 2, 2, 2, 4]}, "languages": {"labels": ["Python", "Javascript", "JavaScript"], "values": [50.0, 50.0, 50.0]}};
+        
+        // 初始化图表
+        document.addEventListener('DOMContentLoaded', function() {
+            initDailyChart();
+            initLanguageChart();
+        });
+        
+        function initDailyChart() {
+            const ctx = document.getElementById('dailyChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.daily.labels,
+                    datasets: [{
+                        label: 'AI项目数量',
+                        data: chartData.daily.values,
+                        borderColor: '#ff006e',
+                        backgroundColor: 'rgba(255, 0, 110, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff' }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        },
+                        y: {
+                            ticks: { color: '#fff' },
+                            grid: { color: 'rgba(255,255,255,0.1)' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function initLanguageChart() {
+            const ctx = document.getElementById('languageChart');
+            if (!ctx) return;
+            
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: chartData.languages.labels,
+                    datasets: [{
+                        data: chartData.languages.values,
+                        backgroundColor: [
+                            '#ff006e', '#8338ec', '#3a86ff', '#06ffa5',
+                            '#ffbe0b', '#fb5607', '#ff006e', '#8338ec'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#fff' }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function viewDetails(date) {
+            // 这里可以添加查看详情的功能
+            alert('查看 ' + date + ' 的详细记录');
+        }
+        
+    </script>
+</body>
+</html>
+        

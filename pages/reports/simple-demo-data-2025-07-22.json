@@ -1,0 +1,92 @@
+[
+  {
+    "name": "awesome-ai-chatbot",
+    "description": "An advanced AI chatbot powered by large language models and natural language processing",
+    "url": "https://github.com/demo/awesome-ai-chatbot",
+    "stars": 2500,
+    "forks": 450,
+    "votes": 0,
+    "language": "Python",
+    "tags": [
+      "ai",
+      "chatbot",
+      "nlp",
+      "llm"
+    ],
+    "author": "ai-researcher",
+    "source": "github",
+    "created_at": "2023-01-15T10:00:00Z",
+    "updated_at": "2023-12-01T15:30:00Z",
+    "cleaned_at": "2025-07-22T11:46:29.500189",
+    "ai_classification": {
+      "is_ai_related": true,
+      "confidence_score": 1.0,
+      "reasoning": "基于关键词匹配: ['ai', 'nlp', 'chatbot', 'llm', 'model', 'language model']",
+      "ai_categories": [
+        "AI相关"
+      ],
+      "tech_stack": [
+        "ai",
+        "nlp",
+        "chatbot",
+        "llm",
+        "model",
+        "language model"
+      ]
+    }
+  },
+  {
+    "name": "ml-vision-toolkit",
+    "description": "A comprehensive computer vision toolkit for machine learning with deep learning models",
+    "url": "https://github.com/demo/ml-vision-toolkit",
+    "stars": 1800,
+    "forks": 320,
+    "votes": 0,
+    "language": "Python",
+    "tags": [
+      "machine-learning",
+      "computer-vision",
+      "deep-learning"
+    ],
+    "author": "vision-lab",
+    "source": "github",
+    "created_at": "2023-03-20T14:00:00Z",
+    "updated_at": "2023-11-28T09:15:00Z",
+    "cleaned_at": "2025-07-22T11:46:29.500213",
+    "ai_classification": {
+      "is_ai_related": true,
+      "confidence_score": 1.0,
+      "reasoning": "基于关键词匹配: ['machine learning', 'deep learning', 'ml', 'computer vision', 'model', 'vision']",
+      "ai_categories": [
+        "AI相关"
+      ],
+      "tech_stack": [
+        "machine learning",
+        "deep learning",
+        "ml",
+        "computer vision",
+        "model",
+        "vision"
+      ]
+    }
+  },
+  {
+    "name": "simple-web-app",
+    "description": "A simple web application for managing tasks and projects",
+    "url": "https://github.com/demo/simple-web-app",
+    "stars": 45,
+    "forks": 12,
+    "votes": 0,
+    "language": "Javascript",
+    "tags": [
+      "web",
+      "app",
+      "productivity"
+    ],
+    "author": "web-dev",
+    "source": "github",
+    "created_at": "2023-08-15T09:00:00Z",
+    "updated_at": "2023-11-25T14:30:00Z",
+    "cleaned_at": "2025-07-22T11:46:29.500228"
+  }
+]
